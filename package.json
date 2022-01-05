@@ -1,0 +1,31 @@
+{
+  "name": "bitrix24-sdk",
+  "version": "0.0.1",
+  "description": "Bitrix24 SDK",
+  "main": "index.js",
+  "scripts": {
+    "fetch-script": "node scripts/fetchScript.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitrix24-apps/bitrix24-sdk.git"
+  },
+  "keywords": [
+    "bitrix",
+    "bitrix24",
+    "bx",
+    "bx24",
+    "sdk",
+    "typescript",
+    "rest",
+    "api",
+    "helper"
+  ],
+  "author": "alexandrtovmach@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bitrix24-apps/bitrix24-sdk/issues"
+  },
+  "homepage": "https://github.com/bitrix24-apps/bitrix24-sdk#readme"
+}
