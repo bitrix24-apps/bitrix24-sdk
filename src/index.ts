@@ -1,9 +1,13 @@
 import PostMessageClient from "./sendMessage";
+import { PostMessageCommand } from "./postMessage";
+import { AppConfig } from "./bitrix";
+
+const getExpirationDateInMS = (expiryPeriod: string) =>
+  Date.now().valueOf() + Number(expiryPeriod || 0) * 1000;
 
 class Bitrix24SDK {
   private postMessageClient: PostMessageClient;
   config: AppConfig;
-  authData: any;
 
   constructor(
     private currentWindow: Window = window,
@@ -23,31 +27,46 @@ class Bitrix24SDK {
   }
 
   async auth() {
-    if (this.authData.expiresAt > Date.now()) {
+    if (this.config.AUTH_EXPIRES_AT > Date.now()) {
       return this.config;
     } else {
       return this.postMessageClient
-        .sendMessage({ command: PostMessageCommand.getInitData })
+        .sendMessage(PostMessageCommand.getInitData)
         .then((data) => {
-          this.config = { ...this.config, ...data };
-          this.authData = {
-            expiresAt:
-              Date.now().valueOf() + Number(data.AUTH_EXPIRES || 0) * 1000,
+          this.config = {
+            ...this.config,
+            ...data,
+            AUTH_EXPIRES_AT: getExpirationDateInMS(data.AUTH_EXPIRES),
           };
+
           return this.config;
         });
     }
   }
 
   async refreshAuth() {
-    sendMessage("refreshAuth", {}, function (p) {
-      PARAMS.AUTH_ID = p.AUTH_ID;
-      PARAMS.REFRESH_ID = p.REFRESH_ID;
-      PARAMS.AUTH_EXPIRES = new Date().valueOf() + p.AUTH_EXPIRES * 1000;
-      if (!!cb) {
-        cb(BX24.getAuth());
-      }
-    });
+    return this.postMessageClient
+      .sendMessage(PostMessageCommand.refreshAuth)
+      .then((data) => {
+        this.config = {
+          ...this.config,
+          ...data,
+          AUTH_EXPIRES_AT: getExpirationDateInMS(data.AUTH_EXPIRES),
+        };
+        return this.config;
+      });
+  }
+
+  getLang() {
+    return this.config.LANG;
+  }
+
+  isAdmin() {
+    return Boolean(this.config.IS_ADMIN);
+  }
+
+  getDomain() {
+    return this.config.DOMAIN;
   }
 }
 

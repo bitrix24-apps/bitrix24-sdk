@@ -1,7 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
+import { AppConfig } from "./bitrix";
+import { PostMessageClientType } from "./postMessage";
 
-class PostMessageClient {
-  private resolvers: Record<string, Function> = {};
+class PostMessageClient implements PostMessageClientType {
+  private resolvers: Record<string, Function>;
   private parentUrl: string;
   private appSId: string;
 
@@ -18,9 +20,7 @@ class PostMessageClient {
     );
   }
 
-  
-
-  public sendMessage = async ({ command, params }: SendPostMessageArgs) => {
+  public sendMessage: PostMessageClientType["sendMessage"] = async (command, params?: any) => {
     const paramsStr = params && JSON.stringify(params);
     const resolverId = uuidv4();
     const promise = new Promise<any>((resolve) => {

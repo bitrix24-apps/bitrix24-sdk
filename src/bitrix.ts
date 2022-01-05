@@ -1,7 +1,8 @@
-interface AppConfig {
+export interface AppConfig {
   APP_OPTIONS?: any;
   APP_SID?: string;
   AUTH_EXPIRES?: string;
+  AUTH_EXPIRES_AT?: number;
   AUTH_ID?: string;
   DOMAIN?: string;
   FIRST_RUN?: boolean;

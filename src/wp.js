@@ -172,44 +172,6 @@ BX24.canUse = function(method)
 	}
 };
 
-BX24.isAdmin = function()
-{
-	return !!PARAMS.IS_ADMIN;
-};
-
-BX24.getAuth = function()
-{
-	return (isInit && PARAMS.AUTH_EXPIRES > (new Date()).valueOf())
-		? {access_token: PARAMS.AUTH_ID, refresh_token: PARAMS.REFRESH_ID, expires_in: PARAMS.AUTH_EXPIRES, domain: PARAMS.DOMAIN, member_id: PARAMS.MEMBER_ID}
-		: false;
-};
-
-BX24.getLang = function()
-{
-	return PARAMS.LANG;
-};
-
-BX24.getDomain = function()
-{
-	return PARAMS.DOMAIN;
-};
-
-BX24.refreshAuth = function(cb)
-{
-	if(isInit)
-	{
-		sendMessage('refreshAuth', {}, function(p){
-			PARAMS.AUTH_ID = p.AUTH_ID;
-			PARAMS.REFRESH_ID = p.REFRESH_ID;
-			PARAMS.AUTH_EXPIRES = (new Date()).valueOf()+p.AUTH_EXPIRES*1000;
-			if(!!cb)
-			{
-				cb(BX24.getAuth());
-			}
-		});
-	}
-};
-
 BX24.resizeWindow = function(width, height, cb)
 {
 	width = parseInt(width); height = parseInt(height);
