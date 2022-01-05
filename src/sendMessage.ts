@@ -1,13 +1,14 @@
-import { PARAMS } from "./settings";
-import { uniqid } from "./utils";
+import { v4 as uuidv4 } from "uuid";
 
 class PostMessageClient {
-  private resolvers: Record<string, Function>;
-  private parentUrl: string = `http${PARAMS.PROTOCOL ? "s" : ""}://${
-    PARAMS.DOMAIN
-  }`;
+  private resolvers: Record<string, Function> = {};
+  private parentUrl: string;
+  private appSId: string;
 
   constructor(private currentWindow: Window, private parentWindow: Window) {
+    const [DOMAIN, PROTOCOL, APP_SID] = currentWindow.name.split("|");
+    this.appSId = APP_SID;
+    this.parentUrl = `http${PROTOCOL ? "s" : ""}://${DOMAIN}`;
     this.currentWindow.addEventListener(
       "message",
       this.receiveMessage.bind(this)
@@ -16,12 +17,12 @@ class PostMessageClient {
 
   public sendMessage = async (cmd: string, params?: any) => {
     const paramsStr = params && JSON.stringify(params);
-    const resolverId = uniqid();
+    const resolverId = uuidv4();
     const promise = new Promise<any>((resolve) => {
       this.addResolver(resolverId, resolve);
     });
 
-    const commandStr = [cmd, paramsStr, resolverId, PARAMS.APP_SID]
+    const commandStr = [cmd, paramsStr, resolverId, this.appSId]
       .filter(Boolean)
       .join(":");
 
@@ -44,8 +45,9 @@ class PostMessageClient {
 
   private receiveMessage = (e: MessageEvent) => {
     if (e.origin === this.parentUrl && e.data) {
-      const [resolverId, argsStr] = e.data.split(":");
-      this.getResolver(resolverId).call(null, JSON.parse(argsStr));
+      const [resolverId, ...rest] = e.data.split(":");
+      const args = rest.join(":");
+      this.getResolver(resolverId).call(null, JSON.parse(args));
       this.removeResolver(resolverId);
     }
   };
