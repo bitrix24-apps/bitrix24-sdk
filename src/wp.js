@@ -172,32 +172,6 @@ BX24.canUse = function(method)
 	}
 };
 
-BX24.resizeWindow = function(width, height, cb)
-{
-	width = parseInt(width); height = parseInt(height);
-	if(width > 0 && height > 0)
-	{
-		sendMessage('resizeWindow', {width:width,height:height}, cb);
-	}
-};
-
-BX24.fitWindow = function(cb)
-{
-	sendMessage('resizeWindow', {
-		width:'100%', height:BX24.getScrollSize().scrollHeight
-	}, cb);
-};
-
-BX24.reloadWindow = function(cb)
-{
-	sendMessage('reloadWindow', {}, cb);
-};
-
-BX24.setTitle = function(title, cb)
-{
-	sendMessage('setTitle', {title:title.toString()}, cb);
-};
-
 BX24.scrollParentWindow = function(scroll, cb)
 {
 	scroll = parseInt(scroll);
@@ -283,14 +257,6 @@ BX24.unbind = function(el, evname, func)
 		el.detachEvent("on" + evname, BX24.proxy(func, el));
 	else
 		el["on" + evname] = null;
-};
-
-BX24.getScrollSize = function()
-{
-	return {
-		scrollWidth: Math.max(document.documentElement.scrollWidth, document.documentElement.offsetWidth),
-		scrollHeight: Math.max(document.documentElement.scrollHeight, document.documentElement.offsetHeight)
-	};
 };
 
 BX24.selectAccess = function(title, value, cb)

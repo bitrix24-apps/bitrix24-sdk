@@ -3,12 +3,27 @@ import { AppConfig } from "./bitrix";
 export interface PostMessageClientType {
   sendMessage(command: PostMessageCommand.getInitData): Promise<AppConfig>;
   sendMessage(command: PostMessageCommand.refreshAuth): Promise<AppConfig>;
-  sendMessage(command: keyof typeof PostMessageCommand, params?: any): Promise<any>;
+  sendMessage(
+    command: PostMessageCommand.resizeWindow,
+    params: { width: number | string; height: number | string }
+  ): Promise<{ width: number; height: number }>;
+  sendMessage(
+    command: PostMessageCommand.setTitle,
+    params: { title: string }
+  ): Promise<any>;
+  sendMessage(command: PostMessageCommand.reloadWindow): Promise<any>;
+  sendMessage(
+    command: keyof typeof PostMessageCommand,
+    params?: any
+  ): Promise<any>;
 }
 
 export enum PostMessageCommand {
   getInitData = "getInitData",
   refreshAuth = "refreshAuth",
+  resizeWindow = "resizeWindow",
+  reloadWindow = "reloadWindow",
+  setTitle = "setTitle",
   crmSettingsModeGet = "crm.settings.mode.get",
   crmStatusFields = "crm.status.fields",
   crmStatusAdd = "crm.status.add",

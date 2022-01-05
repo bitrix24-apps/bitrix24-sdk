@@ -68,6 +68,52 @@ class Bitrix24SDK {
   getDomain() {
     return this.config.DOMAIN;
   }
+
+  async resizeWindow(width: number, height: number) {
+    if (width && height) {
+      return this.postMessageClient.sendMessage(
+        PostMessageCommand.resizeWindow,
+        { width, height }
+      );
+    } else {
+      console.error(
+        `resizeWindow: "width" and "height" should be a positive number`
+      );
+    }
+  }
+
+  async fitWindow() {
+    const { scrollHeight } = this.getScrollSize();
+    return this.postMessageClient.sendMessage(PostMessageCommand.resizeWindow, {
+      width: "100%",
+      height: scrollHeight,
+    });
+  }
+
+  getScrollSize() {
+    return {
+      scrollWidth: Math.max(
+        document.documentElement.scrollWidth,
+        document.documentElement.offsetWidth
+      ),
+      scrollHeight: Math.max(
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+      ),
+    };
+  }
+
+  async reloadWindow() {
+    const { scrollHeight } = this.getScrollSize();
+    return this.postMessageClient.sendMessage(PostMessageCommand.reloadWindow);
+  }
+
+  async setTitle(title: string) {
+    const { scrollHeight } = this.getScrollSize();
+    return this.postMessageClient.sendMessage(PostMessageCommand.setTitle, {
+      title,
+    });
+  }
 }
 
 export default Bitrix24SDK;
