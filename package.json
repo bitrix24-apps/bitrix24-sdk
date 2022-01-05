@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/bitrix24-apps/bitrix24-sdk/issues"
   },
-  "homepage": "https://github.com/bitrix24-apps/bitrix24-sdk#readme"
+  "homepage": "https://github.com/bitrix24-apps/bitrix24-sdk#readme",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
 }
