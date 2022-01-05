@@ -172,11 +172,6 @@ export const blank = function () {};
 //   };
 // },
 
-export const split = function (s, ss) {
-  var r = s.split(ss);
-  return [r[0], r.slice(1).join(ss)];
-}
-
 // clone: function (obj, bCopyObj) {
 //   var _obj, i, l;
 //   if (bCopyObj !== false) bCopyObj = true;
@@ -212,14 +207,6 @@ export const split = function (s, ss) {
 
 //   return _obj;
 // },
-
-const charsList = '0123456789abcdefghijklmnopqrstuvwxyz';
-export const uniqid = function () {
-  var s = "";
-  for (var i = 0; i < 32; i++)
-    s += charsList[Math.round(Math.random() * (charsList.length - 1))];
-  return s;
-}
 
 // datatype utility
 export const type = {
