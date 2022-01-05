@@ -1,26 +1,8 @@
 import PostMessageClient from "./sendMessage";
 
-export interface Config {
-  APP_OPTIONS?: any;
-  APP_SID?: string;
-  AUTH_EXPIRES?: string;
-  AUTH_ID?: string;
-  DOMAIN?: string;
-  FIRST_RUN?: boolean;
-  INSTALL?: any;
-  IS_ADMIN?: boolean;
-  LANG?: string;
-  MEMBER_ID?: string;
-  PATH?: string;
-  PLACEMENT_OPTIONS?: any;
-  PLACEMENT?: string;
-  PROTOCOL?: number;
-  REFRESH_ID?: string;
-  USER_OPTIONS?: any;
-}
 class Bitrix24SDK {
   private postMessageClient: PostMessageClient;
-  config: Config;
+  config: AppConfig;
   authData: any;
 
   constructor(
@@ -45,15 +27,27 @@ class Bitrix24SDK {
       return this.config;
     } else {
       return this.postMessageClient
-        .sendMessage("getInitData")
-        .then((data: Config) => {
+        .sendMessage({ command: PostMessageCommand.getInitData })
+        .then((data) => {
           this.config = { ...this.config, ...data };
           this.authData = {
-            expiresAt: Date.now().valueOf() + +data.AUTH_EXPIRES * 1000,
+            expiresAt:
+              Date.now().valueOf() + Number(data.AUTH_EXPIRES || 0) * 1000,
           };
           return this.config;
         });
     }
+  }
+
+  async refreshAuth() {
+    sendMessage("refreshAuth", {}, function (p) {
+      PARAMS.AUTH_ID = p.AUTH_ID;
+      PARAMS.REFRESH_ID = p.REFRESH_ID;
+      PARAMS.AUTH_EXPIRES = new Date().valueOf() + p.AUTH_EXPIRES * 1000;
+      if (!!cb) {
+        cb(BX24.getAuth());
+      }
+    });
   }
 }
 
