@@ -21,10 +21,7 @@ proxyList = [],
 proxyContext = null,
 
 /* list of registered event handlers */
-eventsList = [],
-
-/* chars list for string id generator */
-charsList = '0123456789abcdefghijklmnopqrstuvwxyz';
+eventsList = [];
 
 /*************** public section ***********************/
 
@@ -785,12 +782,6 @@ var util = {
 		};
 	},
 
-	split: function(s,ss)
-	{
-		var r = s.split(ss);
-		return [r[0],r.slice(1).join(ss)];
-	},
-
 	clone: function(obj, bCopyObj)
 	{
 		var _obj, i, l;
@@ -844,14 +835,6 @@ var util = {
 		}
 
 		return _obj;
-	},
-
-	uniqid: function()
-	{
-		var s = '';
-		for (var i = 0; i <32; i++)
-			s += charsList[Math.round(Math.random()*(charsList.length-1))];
-		return s;
 	},
 
 	// datatype utility

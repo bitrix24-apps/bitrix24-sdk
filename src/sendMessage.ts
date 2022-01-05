@@ -1,21 +1,21 @@
 import { v4 as uuidv4 } from "uuid";
+import { Config } from ".";
 
 class PostMessageClient {
   private resolvers: Record<string, Function> = {};
   private parentUrl: string;
   private appSId: string;
 
-  constructor(private currentWindow: Window, private parentWindow: Window) {
-    const [DOMAIN, PROTOCOL, APP_SID] = currentWindow.name.split("|");
-    this.appSId = APP_SID;
+  constructor(private currentWindow: Window, private parentWindow: Window, { APP_SID, DOMAIN, PROTOCOL }: Config) {
     this.parentUrl = `http${PROTOCOL ? "s" : ""}://${DOMAIN}`;
+    this.appSId = APP_SID;
     this.currentWindow.addEventListener(
       "message",
       this.receiveMessage.bind(this)
     );
   }
 
-  public sendMessage = async (cmd: string, params?: any) => {
+  public sendMessage = async (cmd: PostCommands, params?: any) => {
     const paramsStr = params && JSON.stringify(params);
     const resolverId = uuidv4();
     const promise = new Promise<any>((resolve) => {
