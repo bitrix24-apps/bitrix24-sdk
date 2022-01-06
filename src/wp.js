@@ -309,41 +309,6 @@ BX24.selectCRM = function(params, cb)
 	}, cb);
 };
 
-BX24.openApplication = function(params, cb, settings)
-{
-	if(util.type.isFunction(params))
-	{
-		cb = params;
-		params = {};
-	}
-
-	if(util.type.isObject(settings))
-	{
-		for (var item in settings)
-		{
-			params["bx24_" + item] = settings[item];
-		}
-	}
-
-	sendMessage('openApplication', params, cb);
-};
-
-BX24.openPath = function(path, cb)
-{
-	sendMessage(
-		'openPath',
-		{
-			path: path
-		},
-		cb
-	);
-};
-
-BX24.closeApplication = function(cb)
-{
-	sendMessage('closeApplication', cb);
-};
-
 BX24.im = {
 	callTo: function(userId, video)
 	{

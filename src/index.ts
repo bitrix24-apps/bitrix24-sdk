@@ -112,6 +112,18 @@ class Bitrix24SDK {
       title,
     });
   }
+
+  async closeApplication() {
+    return this.postMessageClient.sendMessage(PostMessageCommand.closeApplication);
+  }
+
+  async openApplication(options: any) {
+    return this.postMessageClient.sendMessage(PostMessageCommand.openApplication, options);
+  }
+
+  async openPath(path: string) {
+    return this.postMessageClient.sendMessage(PostMessageCommand.openPath, { path });
+  }
 }
 
 export default Bitrix24SDK;

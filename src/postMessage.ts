@@ -2,7 +2,9 @@ import { AppConfig } from "./bitrix";
 
 export interface PostMessageClientType {
   sendMessage(command: PostMessageCommand.getInitData): Promise<AppConfig>;
-  sendMessage(command: PostMessageCommand.refreshAuth): Promise<Pick<AppConfig, 'AUTH_ID' | 'AUTH_EXPIRES' | 'REFRESH_ID'>>;
+  sendMessage(
+    command: PostMessageCommand.refreshAuth
+  ): Promise<Pick<AppConfig, "AUTH_ID" | "AUTH_EXPIRES" | "REFRESH_ID">>;
   sendMessage(
     command: PostMessageCommand.resizeWindow,
     params: { width: number | string; height: number | string }
@@ -11,7 +13,21 @@ export interface PostMessageClientType {
     command: PostMessageCommand.setTitle,
     params: { title: string }
   ): Promise<{ title: string }>;
-  sendMessage(command: PostMessageCommand.reloadWindow, params: any, withoutCallback: true): Promise<void>;
+  sendMessage(
+    command: PostMessageCommand.reloadWindow,
+    params: any,
+    withoutCallback: true
+  ): void;
+  // add types from modules/rest/install/js/rest/applayout.js:58
+  sendMessage(
+    command: PostMessageCommand.openApplication,
+    params: any
+  ): Promise<void>;
+  sendMessage(command: PostMessageCommand.closeApplication): Promise<any>;
+  sendMessage(
+    command: PostMessageCommand.openPath,
+    params: { path: string }
+  ): Promise<{ result: string; errorCode?: string }>;
   sendMessage(
     command: keyof typeof PostMessageCommand,
     params?: any
@@ -24,6 +40,9 @@ export enum PostMessageCommand {
   resizeWindow = "resizeWindow",
   setTitle = "setTitle",
   reloadWindow = "reloadWindow",
+  openApplication = "openApplication",
+  openPath = "openPath",
+  closeApplication = "closeApplication",
   crmSettingsModeGet = "crm.settings.mode.get",
   crmStatusFields = "crm.status.fields",
   crmStatusAdd = "crm.status.add",

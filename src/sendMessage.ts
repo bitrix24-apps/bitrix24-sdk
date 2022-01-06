@@ -25,19 +25,28 @@ class PostMessageClient implements PostMessageClientType {
     params?: any,
     withoutCallback?: boolean
   ) => {
-    const paramsStr = JSON.stringify(params || {});
-    const resolverId = withoutCallback ? "" : uuidv4();
-    const promise = new Promise<any>((resolve) => {
-      this.addResolver(resolverId, resolve);
-    });
-
-    const commandStr = [command, paramsStr, resolverId, this.appSId]
-      .filter(Boolean)
-      .join(":");
-
-    this.parentWindow.postMessage(commandStr, this.parentUrl);
-
-    return promise;
+    if (withoutCallback) {
+      const paramsStr = JSON.stringify(params || {});
+      const resolverId = '';
+      const commandStr = [command, paramsStr, resolverId, this.appSId]
+        .filter(Boolean)
+        .join(":");
+      this.parentWindow.postMessage(commandStr, this.parentUrl);
+    } else {
+      const paramsStr = JSON.stringify(params || {});
+      const resolverId = uuidv4();
+      const promise = new Promise<any>((resolve) => {
+        this.addResolver(resolverId, resolve);
+      });
+  
+      const commandStr = [command, paramsStr, resolverId, this.appSId]
+        .filter(Boolean)
+        .join(":");
+  
+      this.parentWindow.postMessage(commandStr, this.parentUrl);
+  
+      return promise;
+    }
   };
 
   private addResolver = (id: string, resolver: Function) => {
