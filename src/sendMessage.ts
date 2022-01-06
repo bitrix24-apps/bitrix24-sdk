@@ -20,9 +20,13 @@ class PostMessageClient implements PostMessageClientType {
     );
   }
 
-  public sendMessage: PostMessageClientType["sendMessage"] = async (command, params?: any) => {
-    const paramsStr = params && JSON.stringify(params);
-    const resolverId = uuidv4();
+  public sendMessage: PostMessageClientType["sendMessage"] = async (
+    command,
+    params?: any,
+    withoutCallback?: boolean
+  ) => {
+    const paramsStr = JSON.stringify(params || {});
+    const resolverId = withoutCallback ? "" : uuidv4();
     const promise = new Promise<any>((resolve) => {
       this.addResolver(resolverId, resolve);
     });
@@ -37,7 +41,9 @@ class PostMessageClient implements PostMessageClientType {
   };
 
   private addResolver = (id: string, resolver: Function) => {
-    this.resolvers[id] = resolver;
+    if (id) {
+      this.resolvers[id] = resolver;
+    }
   };
 
   private getResolver = (id: string) => {

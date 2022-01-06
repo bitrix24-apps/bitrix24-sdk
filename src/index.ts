@@ -3,7 +3,7 @@ import { PostMessageCommand } from "./postMessage";
 import { AppConfig } from "./bitrix";
 
 const getExpirationDateInMS = (expiryPeriod: string) =>
-  Date.now().valueOf() + Number(expiryPeriod || 0) * 1000;
+  Date.now() + Number(expiryPeriod || 0) * 1000;
 
 class Bitrix24SDK {
   private postMessageClient: PostMessageClient;
@@ -27,7 +27,7 @@ class Bitrix24SDK {
   }
 
   async auth() {
-    if (this.config.AUTH_EXPIRES_AT > Date.now()) {
+    if (this.config.AUTH_EXPIRES_AT > Date.now() + 1000 * 60) {
       return this.config;
     } else {
       return this.postMessageClient
@@ -103,13 +103,11 @@ class Bitrix24SDK {
     };
   }
 
-  async reloadWindow() {
-    const { scrollHeight } = this.getScrollSize();
-    return this.postMessageClient.sendMessage(PostMessageCommand.reloadWindow);
+  reloadWindow() {
+    return this.postMessageClient.sendMessage(PostMessageCommand.reloadWindow, {}, true);
   }
 
   async setTitle(title: string) {
-    const { scrollHeight } = this.getScrollSize();
     return this.postMessageClient.sendMessage(PostMessageCommand.setTitle, {
       title,
     });
